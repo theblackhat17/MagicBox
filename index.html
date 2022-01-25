@@ -22,6 +22,12 @@
     }
 
     body {
+      margin: 0 auto;
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    }
+
+    .list_wifi_available
+    {
       max-width: 400px;
       margin: 0 auto;
       padding: 1em;
@@ -43,18 +49,24 @@
     }
 
     input:focus {
-      border-color: #1e90ff;
+      border-color: #00cc99;
     }
 
     button {
       border: 0;
       color: #fff;
-      background: #1e90ff;
+      background: #00cc99;
+    }
+
+    #submit {
+      opacity: 0.7;
+      background:#00cc99;
     }
 
     #cancel {
       border: 0;
       text-align: center;
+      cursor: pointer;
     }
 
     form > div {
@@ -68,6 +80,7 @@
 
     #scan-form button {
       margin: 0;
+      cursor: pointer;
     }
 
     #wifi-list > div {
@@ -80,6 +93,12 @@
       color: #fff;
       background: #1e90ff;
       border-color: #1e90ff;
+    }
+
+    #wifi-list > div:hover {
+      background: #00cc99;
+      color:white;
+      transition: all 0.3s ease-out;
     }
 
     i {
@@ -110,64 +129,70 @@
 </head>
 
 <body>
-<form id='scan-form' method='GET' action='/scan'>
-  <button type='submit' form='scan-form'>Scan WIFI</button>
-</form>
+  <img src="logo_size.jpg" class="img_logo"/>
+  <div class="list_wifi_available">       
+    <form id='scan-form' method='GET' action='/scan'>
+      <button type='submit' form='scan-form'>Scan WIFI</button>
+    </form>
 
-<h2>Networks</h2>
+    <h2>Networks</h2>
 
-<div id='wifi-list'>
+    <div id='wifi-list'>
 
-  <div onclick='ssidClick(this)'>
-    <span>Yncrea_Lab</span>
-    <i></i>
+      <div onclick='ssidClick(this)'>
+        <span>Yncrea_Lab</span>
+        <i></i>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Junia_Students</span>
+        <i></i>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Adimaker_wifi</span>
+        <i></i>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Axel_iphone</span>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Wifi_gratuit</span>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>V@n3ssa</span>
+        <i></i>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Hacker_sécurisé</span>
+        <i></i>
+      </div>
+
+      <div onclick='ssidClick(this)'>
+        <span>Viens-ici</span>
+        <i></i>
+      </div>
+
+    </div>
+
+    <form id='wifi-form' method='GET' action='load.html' class='hidden'><!-- action='/settings' -->
+      <input id='ssid' name='ssid' type='hidden'>
+      <div>
+        <label for='pass'>Password:</label>
+        <input id='pass' name='pass' type='password' minlength='8' maxlength='64' required>
+      </div>
+      <div>
+        <label for='pass'>Adresse IP de la Raspberry:</label>
+        <input id='pass' name='ip' type='text' maxlength='15' required>
+      </div>
+      <button id='submit' type='submit' form='wifi-form'>Connect</button>
+      <span id='cancel' onclick='showWifi()'>Cancel</span>
+    </form>
   </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Junia_Students</span>
-    <i></i>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Adimaker_wifi</span>
-    <i></i>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Axel_iphone</span>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Wifi_gratuit</span>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>V@n3ssa</span>
-    <i></i>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Haker_sécurisé</span>
-    <i></i>
-  </div>
-
-  <div onclick='ssidClick(this)'>
-    <span>Viens-ici</span>
-    <i></i>
-  </div>
-
-</div>
-
-<form id='wifi-form' method='GET' action='/setting' class='hidden'>
-  <input id='ssid' name='ssid' type='hidden'>
-  <div>
-    <label for='pass'>Password:</label>
-    <input id='pass' name='pass' type='password' minlength='8' maxlength='64' required>
-  </div>
-  <button id='submit' type='submit' form='wifi-form'>Connect</button>
-  <span id='cancel' onclick='showWifi()'>Cancel</span>
-</form>
-
 <script>
   var $ = function (id) {
     return document.getElementById(id);
