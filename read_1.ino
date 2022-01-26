@@ -27,7 +27,6 @@ bool receivedPASSWORD = false;
 bool receivedRPI = false;
 
 
-
 class CaptiveRequestHandler : public AsyncWebHandler {
   public:CaptiveRequestHandler() {}
   virtual ~CaptiveRequestHandler() {}
@@ -41,6 +40,208 @@ class CaptiveRequestHandler : public AsyncWebHandler {
   }
 };
 
+      const char index_html[] PROGMEM = R"rawliteral(
+          <!DOCTYPE html>
+      <html lang="en" >
+      <head>
+        <meta charset="UTF-8">
+        <title>MagicBox</title>
+        
+
+      </head>
+      <body>
+      <!-- partial:index.partial.html -->
+      <!DOCTYPE html>
+      <html>
+
+      <head>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>IDPay Q</title>
+        <style>
+          html {
+            background: #f4f4f4;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+          }
+
+          body {
+            margin: 0 auto;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+          }
+
+          .list_wifi_available
+          {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 1em;
+          }
+
+          input,
+          button,
+          #cancel,
+          #wifi-list > div {
+            border: 1px solid #d3d3d3;
+            outline: 0;
+            border-radius: 0.6em;
+            display: block;
+            width: 100%;
+            padding: 0.8em;
+            margin: 0.4em auto;
+            box-sizing: border-box;
+            font-size: 16px;
+          }
+
+          input:focus {
+            border-color: #00cc99;
+          }
+
+          button {
+            border: 0;
+            color: #fff;
+            background: #00cc99;
+          }
+
+          #submit {
+            opacity: 0.7;
+            background:#00cc99;
+          }
+
+          #cancel {
+            border: 0;
+            text-align: center;
+            cursor: pointer;
+          }
+
+          form > div {
+            margin-bottom: 1em;
+          }
+
+          #scan-form {
+            float: right;
+            margin-top: 0.95em;
+          }
+
+          #scan-form button {
+            margin: 0;
+            cursor: pointer;
+          }
+
+          #wifi-list > div {
+            background: #fff;
+            padding: 1.2em;
+            margin: 1em auto;
+          }
+
+          #wifi-list > div:active {
+            color: #fff;
+            background: #1e90ff;
+            border-color: #1e90ff;
+          }
+
+          #wifi-list > div:hover {
+            background: #00cc99;
+            color:white;
+            transition: all 0.3s ease-out;
+          }
+
+          i {
+            float: right;
+            background: #000;
+            width: 16px;
+            height: 10px;
+            margin-top: 8px;
+            position: relative;
+            border-radius: 2px;
+          }
+
+          i:before {
+            content: '';
+            border: 2px solid #000;
+            width: 6px;
+            height: 6px;
+            top: -8px;
+            left: 3px;
+            position: absolute;
+            border-radius: 50% 50% 0 0;
+          }
+
+          .hidden {
+            display: none;
+          }
+        </style>
+      </head>
+
+      <body>
+        <img src="logo_size.jpg" class="img_logo"/>
+        <div class="list_wifi_available">       
+          <form id='scan-form' method='GET' action='/scan'>
+            <button type='submit' form='scan-form'>Scan WIFI</button>
+          </form>
+
+          <h2>Networks</h2>
+
+          <div id='wifi-list'>
+
+            <div onclick='ssidClick(this)'>
+      )rawliteral";
+
+      const char index_html2[] PROGMEM = R"rawliteral(
+            <i></i>
+          </div>
+
+        </div>
+
+        <form id='wifi-form' method='GET' action='load.html' class='hidden'><!-- action='/settings' -->
+          <input id='ssid' name='ssid' type='hidden'>
+          <div>
+            <label for='pass'>Password:</label>
+            <input id='pass' name='pass' type='password' minlength='8' maxlength='64' required>
+          </div>
+          <div>
+            <label for='pass'>Adresse IP de la Raspberry:</label>
+            <input id='pass' name='ip' type='text' maxlength='15' required>
+          </div>
+          <button id='submit' type='submit' form='wifi-form'>Connect</button>
+          <span id='cancel' onclick='showWifi()'>Cancel</span>
+        </form>
+      </div>
+    <script>
+      var $ = function (id) {
+        return document.getElementById(id);
+      };
+
+      function ssidClick(e) {
+        $('ssid').value = e.getElementsByTagName('span')[0].innerText;
+
+        if (e.getElementsByTagName('i').length) {
+          hideWifi();
+        } else {
+          $('pass').value = ' ';
+          $('submit').click();
+        }
+      }
+
+      function showWifi() {
+        $('wifi-form').classList.add('hidden');
+        $('scan-form').classList.remove('hidden');
+        $('wifi-list').classList.remove('hidden');
+      }
+
+      function hideWifi() {
+        $('wifi-list').classList.add('hidden');
+        $('scan-form').classList.add('hidden');
+        $('wifi-form').classList.remove('hidden');
+        $('pass').focus();
+      }
+    </script>
+    </body>
+    </html>
+    <!-- partial -->
+      
+    </body>
+    </html>
+)rawliteral";
+
 
 
 void setupServer(){
@@ -50,132 +251,7 @@ void setupServer(){
   });
     
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-      request->send(200, "text/html","<!DOCTYPE html>
-<html lang=\"en\" >
-<head>
-  <meta charset=\"UTF-8\">
-  <title>MagicBox</title>
-  
-
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title>IDPay Q</title>
-  <style>
-    html {
-      background: #f4f4f4;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 16px;
-    }
-
-    body {
-      margin: 0 auto;
-      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    }
-
-    .list_wifi_available
-    {
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 1em;
-    }
-
-    input,
-    button,
-    #cancel,
-    #wifi-list > div {border: 1px solid #d3d3d3;outline: 0;border-radius: 0.6em;display: block;width: 100\%;padding: 0.8em;margin: 0.4em auto;box-sizing: border-box;ont-size: 16px;}
-
-    input:focus {
-      border-color: #00cc99;
-    }
-
-    button {
-      border: 0;
-      color: #fff;
-      background: #00cc99;
-    }
-
-    #submit {opacity: 0.7;background:#00cc99;}
-
-    #cancel {border: 0;text-align: center;cursor: pointer;}
-  
-    form > div {margin-bottom: 1em;}
-
-    #scan-form {float: right;margin-top: 0.95em;}
-
-    #scan-form button {margin: 0;cursor: pointer;
-    }
-
-    #wifi-list > div {background: #fff;padding: 1.2em;margin: 1em auto;}
-
-    #wifi-list > div:active {color: #fff;background: #1e90ff;border-color: #1e90ff;
-    }
-
-    #wifi-list > div:hover {background: #00cc99;color:white;transition: all 0.3s ease-out;}
-
-    .hidden {
-      display: none;
-    }
-  </style>
-</head>
-
-<body>
-  <img src=\"logo_size.jpg\" class=\"img_logo\"/>
-  <div class=\"list_wifi_available\">       
-    <form id='scan-form' method='GET' action='/scan'>
-      <button type='submit' form='scan-form'>Scan WIFI</button>
-    </form>
-    <h2>Networks</h2>
-
-    <div id='wifi-list'>
-
-      <div onclick='ssidClick(this)'>
-        <span>" + message + "</span>
-        <i></i>
-      </div>
-
-    </div>
-    
-    <script>
-        var $ = function (id) {
-          return document.getElementById(id);
-        };
-
-        function ssidClick(e) {
-          $('ssid').value = e.getElementsByTagName('span')[0].innerText;
-
-          if (e.getElementsByTagName('i').length) {
-            hideWifi();
-          } else {
-            $('pass').value = ' ';
-            $('submit').click();
-          }
-        }
-
-        function showWifi() {
-          $('wifi-form').classList.add('hidden');
-          $('scan-form').classList.remove('hidden');
-          $('wifi-list').classList.remove('hidden');
-        }
-
-        function hideWifi() {
-          $('wifi-list').classList.add('hidden');
-          $('scan-form').classList.add('hidden');
-          $('wifi-form').classList.remove('hidden');
-          $('pass').focus();
-        }
-      </script>
-      </body>
-      </html>
-      <!-- partial -->
-        
-      </body>
-      </html>" );
+      request->send(200, "text/html",index_html + message + index_html2 );
   });
 
   server.on("/end", HTTP_GET, [] (AsyncWebServerRequest *request) {
@@ -194,16 +270,14 @@ void setupServer(){
       Serial.println(ssid);
       Serial.println(password);
       //Serial.println(rpi);
-      
+    
       request->send(200, "text/html", "<h1>Merci :) reboot</h1>");
 
   });
     
 }
 
-/**     
- * 
- * const char index_html[] PROGMEM = R"rawliteral(
+/**     const char index_html[] PROGMEM = R"rawliteral(
       <!DOCTYPE HTML><html><head>
         <title>Captive Portal Demo</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
