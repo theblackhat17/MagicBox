@@ -166,7 +166,6 @@ const char index_html[] PROGMEM = R"rawliteral(
     <form id='scan-form' method='GET' action='/scan'>
       <button type='submit' form='scan-form'>Scan WIFI</button>
     </form>
-
     <h2>Networks</h2>
 
     <div id='wifi-list'>
@@ -176,91 +175,7 @@ const char index_html[] PROGMEM = R"rawliteral(
         <i></i>
       </div>
 
-      <div onclick='ssidClick(this)'>
-        <span>Junia_Students</span>
-        <i></i>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>Adimaker_wifi</span>
-        <i></i>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>Axel_iphone</span>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>Wifi_gratuit</span>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>V@n3ssa</span>
-        <i></i>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>Hacker_sécurisé</span>
-        <i></i>
-      </div>
-
-      <div onclick='ssidClick(this)'>
-        <span>Viens-ici</span>
-        <i></i>
-      </div>
-
-    </div>
-
-    <form id='wifi-form' method='GET' action='load.html' class='hidden'><!-- action='/settings' -->
-      <input id='ssid' name='ssid' type='hidden'>
-      <div>
-        <label for='pass'>Password:</label>
-        <input id='pass' name='pass' type='password' minlength='8' maxlength='64' required>
-      </div>
-      <div>
-        <label for='pass'>Adresse IP de la Raspberry:</label>
-        <input id='pass' name='ip' type='text' maxlength='15' required>
-      </div>
-      <button id='submit' type='submit' form='wifi-form'>Connect</button>
-      <span id='cancel' onclick='showWifi()'>Cancel</span>
-    </form>
-  </div>
-<script>
-  var $ = function (id) {
-    return document.getElementById(id);
-  };
-
-  function ssidClick(e) {
-    $('ssid').value = e.getElementsByTagName('span')[0].innerText;
-
-    if (e.getElementsByTagName('i').length) {
-      hideWifi();
-    } else {
-      $('pass').value = ' ';
-      $('submit').click();
-    }
-  }
-
-  function showWifi() {
-    $('wifi-form').classList.add('hidden');
-    $('scan-form').classList.remove('hidden');
-    $('wifi-list').classList.remove('hidden');
-  }
-
-  function hideWifi() {
-    $('wifi-list').classList.add('hidden');
-    $('scan-form').classList.add('hidden');
-    $('wifi-form').classList.remove('hidden');
-    $('pass').focus();
-  }
-</script>
-</body>
-</html>
-<!-- partial -->
-  
-</body>
-</html>
-)rawliteral";
+    </div>)rawliteral";
 
 
 
@@ -309,11 +224,68 @@ void setupServer(){
       Serial.println(ssid);
       Serial.println(password);
       //Serial.println(rpi);
-    
+
+      const char index_html[] PROGMEM = R"rawliteral(
+            <script>
+        var $ = function (id) {
+          return document.getElementById(id);
+        };
+
+        function ssidClick(e) {
+          $('ssid').value = e.getElementsByTagName('span')[0].innerText;
+
+          if (e.getElementsByTagName('i').length) {
+            hideWifi();
+          } else {
+            $('pass').value = ' ';
+            $('submit').click();
+          }
+        }
+
+        function showWifi() {
+          $('wifi-form').classList.add('hidden');
+          $('scan-form').classList.remove('hidden');
+          $('wifi-list').classList.remove('hidden');
+        }
+
+        function hideWifi() {
+          $('wifi-list').classList.add('hidden');
+          $('scan-form').classList.add('hidden');
+          $('wifi-form').classList.remove('hidden');
+          $('pass').focus();
+        }
+      </script>
+      </body>
+      </html>
+      <!-- partial -->
+        
+      </body>
+      </html>)rawliteral";
+      
       request->send(200, "text/html", "<h1>Merci :) reboot</h1>");
 
-  });  
+  });
+    
 }
+
+/**     
+ * 
+ * const char index_html[] PROGMEM = R"rawliteral(
+      <!DOCTYPE HTML><html><head>
+        <title>Captive Portal Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head><body>
+        <h3>HotSpot Groupe B</h3>
+        <h1> Bienvenue sur le menu de configuration de votre objet connecte ! </h1>
+        <form action="/get">
+          <br>
+          Assurez vous d'être a la portee de votre reseaux.
+          <br>
+          <input type="submit" value="Submit">
+        </form>
+      </body></html>)rawliteral";
+
+      **/
 
 void SetListWiFi(){
   WiFi.mode(WIFI_STA);
