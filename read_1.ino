@@ -27,20 +27,8 @@ bool receivedPASSWORD = false;
 bool receivedRPI = false;
 
 
-class CaptiveRequestHandler : public AsyncWebHandler {
-  public:CaptiveRequestHandler() {}
-  virtual ~CaptiveRequestHandler() {}
 
-  bool canHandle(AsyncWebServerRequest *request){
-    //request->addInterestingHeader("ANY");
-    return true;
-  }
-  void handleRequest(AsyncWebServerRequest *request) {
-    request->send_P(200, "text/html", index_html); 
-  }
-};
-
-      const char index_html[] PROGMEM = R"rawliteral(
+  const char index_html[] PROGMEM = R"rawliteral(
           <!DOCTYPE html>
       <html lang="en" >
       <head>
@@ -189,6 +177,8 @@ class CaptiveRequestHandler : public AsyncWebHandler {
             <i></i>
           </div>
 
+          <p>TEST</p>
+
         </div>
 
         <form id='wifi-form' method='GET' action='load.html' class='hidden'><!-- action='/settings' -->
@@ -243,6 +233,21 @@ class CaptiveRequestHandler : public AsyncWebHandler {
 )rawliteral";
 
 
+
+class CaptiveRequestHandler : public AsyncWebHandler {
+  public:CaptiveRequestHandler() {}
+  virtual ~CaptiveRequestHandler() {}
+
+  bool canHandle(AsyncWebServerRequest *request){
+    //request->addInterestingHeader("ANY");
+    return true;
+  }
+  void handleRequest(AsyncWebServerRequest *request) {
+    request->send_P(200, "text/html", index_html); 
+  }
+};
+
+    
 
 void setupServer(){
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
