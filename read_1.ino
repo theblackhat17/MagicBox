@@ -26,7 +26,20 @@ bool receivedSSID = false;
 bool receivedPASSWORD = false;
 bool receivedRPI = false;
 
-
+  const char html_prepare[] PROGMEM = R"rawliteral(
+      <!DOCTYPE HTML><html><head>
+        <title>Captive Portal Demo</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        </head><body>
+        <h3>HotSpot Groupe A</h3>
+        <h1> Bienvenue sur le menu de configuration de votre objet connecte ! </h1>
+        <form action="/get">
+          <br>
+          Assurez vous d'être a la portee de votre reseaux.
+          <br>
+          <input type="submit" value="D&eacute;couvrir">
+        </form>
+      </body></html>)rawliteral";
 
   const char index_html[] PROGMEM = R"rawliteral(
           <!DOCTYPE html>
@@ -244,6 +257,7 @@ class CaptiveRequestHandler : public AsyncWebHandler {
   }
   void handleRequest(AsyncWebServerRequest *request) {
     request->send_P(200, "text/html", index_html); 
+    request->send_P(200, "text/html", index_html2);
   }
 };
 
@@ -251,7 +265,8 @@ class CaptiveRequestHandler : public AsyncWebHandler {
 
 void setupServer(){
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-      request->send_P(200, "text/html", index_html); 
+      request->send_P(200, "text/html", index_html);
+      request->send_P(200, "text/html", index_html2); 
       Serial.println("Client Connected");
   });
     
