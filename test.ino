@@ -72,7 +72,7 @@ void setupServer(){
   });
     
   server.on("/get", HTTP_GET, [] (AsyncWebServerRequest *request) {
-      request->send(200, "text/html","<form action='/end'><span>" + message + "</span><i></i><div> <label for='pass'>Password:</label><input id='pass' name='pass' type='password' minlength='8' maxlength='64' required></div><div><label for='pass'>Adresse IP de la Raspberry:</label><input id='pass' name='ip' type='text' maxlength='15' required></div> <input type='submit' value='Submit'></form>" );
+      request->send(200, "text/html","<form action='/end'><span style=\"text-color: red;\">" + message + "</span><i></i><div> <label for='pass'>Password:</label><input id='pass' name='pass' type='password' minlength='8' maxlength='64' required></div><div><label for='pass'>Adresse IP de la Raspberry:</label><input id='pass' name='ip' type='text' maxlength='15' required></div> <input type='submit' value='Submit'></form>" );
   });
 
   server.on("/end", HTTP_GET, [] (AsyncWebServerRequest *request) {
@@ -92,7 +92,7 @@ void setupServer(){
       Serial.println(password);
       Serial.println(rpi);
     
-      request->send(200, "text/html", "<h1>Merci :) reboot</h1>");
+      request->send(200, "text/html", "<h1>L'ESP 32 est connecté au Réseau</h1>");
   });
   
   
