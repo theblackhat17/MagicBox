@@ -75,7 +75,7 @@ void setupServer() {
 
     }
 
-
+    delay(1000);
     request->send(200, "text/html", "<h1 style=\"text-align:center; text-decoration: underline;\">F&eacute;licitations!</h1> <p style=\"text-align: center; color: #eb4034;\">L'ESP 32 est connect&eacute; au R&eacute;seau</p>");
   });
 
